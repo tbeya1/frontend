@@ -76,7 +76,7 @@ export default {
 
         //const response = await fetch("https://finalweb-6lny.onrender.com/fetch-time");
         // Fetch time data from the backend URL defined in the environment variable
-        const response = await fetch(`${process.env.VUE_APP_BACKEND_URL}/fetch-time`);
+        const response = await fetch(`${process.env.VITE_APP_BACKEND_URL}/fetch-time`);
 
         if (!response.ok) throw new Error("Failed to fetch new time!");
         await this.loadTime();
@@ -93,7 +93,7 @@ export default {
         
         //const response = await fetch("https://finalweb-6lny.onrender.com/time_info");
         // Fetch time information from the backend URL defined in the environment variable
-        const response = await fetch(`${process.env.VUE_APP_BACKEND_URL}/time_info`);
+        const response = await fetch(`${process.env.VITE_APP_BACKEND_URL}/time_info`);
         
         if (!response.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         const data = await res.json();

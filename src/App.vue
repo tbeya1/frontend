@@ -106,9 +106,10 @@ export default {
     },
   },
 
-  mounted() {
-    this.loadTime();
-  },
+mounted() {
+  console.log("Backend URL:", process.env.VUE_APP_BACKEND_URL); // 🔍 Check if this is undefined
+  this.loadTime();
+},
 };
 </script>
 

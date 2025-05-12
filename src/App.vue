@@ -107,7 +107,7 @@ export default {
   },
 
 mounted() {
-  console.log("Backend URL:", process.env.VUE_APP_BACKEND_URL); // 🔍 Check if this is undefined
+  console.log("Backend URL:", import.meta.env.VITE_APP_BACKEND_URL);
   this.loadTime();
 },
 };

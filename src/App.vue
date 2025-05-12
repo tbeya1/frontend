@@ -68,16 +68,11 @@ export default {
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
     },
-    async getTime() {
+        async getTime() {
       this.loading = true;
       this.errorMessage = "";
       try {
-        //const response = await fetch("http://localhost:9999/fetch-time");
-
-        //const response = await fetch("https://finalweb-6lny.onrender.com/fetch-time");
-        // Fetch time data from the backend URL defined in the environment variable
-        const response = await fetch(`${process.env.VITE_APP_BACKEND_URL}/fetch-time`);
-
+        const response = await fetch(`${import.meta.env.VITE_APP_BACKEND_URL}/fetch-time`);
         if (!response.ok) throw new Error("Failed to fetch new time!");
         await this.loadTime();
       } catch (error) {
@@ -87,16 +82,31 @@ export default {
         this.loading = false;
       }
     },
+    // async getTime() {
+    //   this.loading = true;
+    //   this.errorMessage = "";
+    //   try {
+    //     //const response = await fetch("http://localhost:9999/fetch-time");
+
+    //     //const response = await fetch("https://finalweb-6lny.onrender.com/fetch-time");
+    //     // Fetch time data from the backend URL defined in the environment variable
+    //     const response = await fetch(`${process.env.VITE_APP_BACKEND_URL}/fetch-time`);
+
+    //     if (!response.ok) throw new Error("Failed to fetch new time!");
+    //     await this.loadTime();
+    //   } catch (error) {
+    //     this.errorMessage = "Failed to fetch new time data!";
+    //     console.error(error);
+    //   } finally {
+    //     this.loading = false;
+    //   }
+    // },
+
     async loadTime() {
       try {
-        //const res = await fetch("http://localhost:9999/time_info");
-        
-        //const response = await fetch("https://finalweb-6lny.onrender.com/time_info");
-        // Fetch time information from the backend URL defined in the environment variable
-        const response = await fetch(`${process.env.VITE_APP_BACKEND_URL}/time_info`);
-        
-        if (!response.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        const data = await res.json();
+        const response = await fetch(`${import.meta.env.VITE_APP_BACKEND_URL}/time_info`);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        const data = await response.json();
         console.log("Data fetched successfully:", data); // Log the fetched data
         this.time_info = data;
       } catch (error) {
@@ -104,7 +114,25 @@ export default {
         console.error("Error fetching time data:", error);
       }
     },
-  },
+  },    
+  //   async loadTime() {
+  //     try {
+  //       //const res = await fetch("http://localhost:9999/time_info");
+        
+  //       //const response = await fetch("https://finalweb-6lny.onrender.com/time_info");
+  //       // Fetch time information from the backend URL defined in the environment variable
+  //       const response = await fetch(`${process.env.VITE_APP_BACKEND_URL}/time_info`);
+        
+  //       if (!response.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+  //       const data = await res.json();
+  //       console.log("Data fetched successfully:", data); // Log the fetched data
+  //       this.time_info = data;
+  //     } catch (error) {
+  //       this.errorMessage = `Failed to load time data! ${error.message}`;
+  //       console.error("Error fetching time data:", error);
+  //     }
+  //   },
+  // },
 
 mounted() {
   console.log("Backend URL:", import.meta.env.VITE_APP_BACKEND_URL);

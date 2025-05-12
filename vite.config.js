@@ -7,8 +7,8 @@ export default defineConfig({
   define: {
     'process.env': {
       VITE_APP_BACKEND_URL: process.env.NODE_ENV === 'production'
-        ? 'https://finalweb-6lny.onrender.com' //  production backend URL
-        : 'http://localhost:9999', //  local development
+        ? 'https://finalweb-6lny.onrender.com'  // Production backend URL
+        : 'http://localhost:9999',                // Local development backend URL
     },
   },
 });

@@ -72,7 +72,12 @@ export default {
       this.loading = true;
       this.errorMessage = "";
       try {
-        const response = await fetch("http://localhost:9999/fetch-time");
+        //const response = await fetch("http://localhost:9999/fetch-time");
+
+        //const response = await fetch("https://finalweb-6lny.onrender.com/fetch-time");
+        // Fetch time data from the backend URL defined in the environment variable
+        const response = await fetch(`${process.env.VUE_APP_BACKEND_URL}/fetch-time`);
+
         if (!response.ok) throw new Error("Failed to fetch new time!");
         await this.loadTime();
       } catch (error) {
@@ -84,8 +89,13 @@ export default {
     },
     async loadTime() {
       try {
-        const res = await fetch("http://localhost:9999/time_info");
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        //const res = await fetch("http://localhost:9999/time_info");
+        
+        //const response = await fetch("https://finalweb-6lny.onrender.com/time_info");
+        // Fetch time information from the backend URL defined in the environment variable
+        const response = await fetch(`${process.env.VUE_APP_BACKEND_URL}/time_info`);
+        
+        if (!response.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         const data = await res.json();
         console.log("Data fetched successfully:", data); // Log the fetched data
         this.time_info = data;

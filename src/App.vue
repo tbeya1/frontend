@@ -4,7 +4,6 @@
     <nav>
       <div class="content-wrapper">
         <ul class="nav-links" :class="{ 'show': menuOpen }">
-          <!-- Use router-link for navigation -->
           <li><router-link to="/">Home</router-link></li>
           <li><router-link to="/timezones">Time Zones</router-link></li>
           <li><router-link to="/About">About</router-link></li>
@@ -13,7 +12,7 @@
       </div>
     </nav>
 
-    <!-- Header Section -->
+    <!-- Header -->
     <header>
       <div class="content-wrapper">
         <h1>World Time Information</h1>
@@ -24,24 +23,23 @@
       </div>
     </header>
 
-    <!-- Main Section -->
+    <!-- Main -->
     <main>
-      <router-view></router-view>
       <div class="content-wrapper">
         <section class="time-grid">
           <article class="container" v-for="item in time_info" :key="item._id">
             <h3 class="timezone">{{ item.timezone }}</h3>
-            <p><strong>Datetime:</strong> <span>{{ item.datetime }}</span></p>
-            <p><strong>UTC Offset:</strong> <span>{{ item.utc_offset }}</span></p>
-            <p><strong>Abbreviation:</strong> <span>{{ item.abbreviation }}</span></p>
-            <p><strong>Day of the Week:</strong> <span>{{ item.day_of_week }}</span></p>
-            <p><strong>Day of the Year:</strong> <span>{{ item.day_of_year }}</span></p>
-            <p><strong>Unix Time:</strong> <span>{{ item.unixtime }}</span></p>
-            <p><strong>UTC DateTime:</strong> <span>{{ item.utc_datetime }}</span></p>
+            <p><strong>Datetime:</strong> {{ formatDate(item.datetime) }}</p>
+            <p><strong>UTC Offset:</strong> {{ item.utc_offset }}</p>
+            <p><strong>Abbreviation:</strong> {{ item.abbreviation }}</p>
+            <p><strong>Day of the Week:</strong> {{ item.day_of_week }}</p>
+            <p><strong>Day of the Year:</strong> {{ item.day_of_year }}</p>
+            <p><strong>Unix Time:</strong> {{ item.unixtime }}</p>
+            <p><strong>UTC Datetime:</strong> {{ formatDate(item.utc_datetime) }}</p>
           </article>
         </section>
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-        <p v-if="time_info.length === 0" class="no-data-message">No time data available.</p>
+        <p v-if="!loading && time_info.length === 0" class="no-data-message">No time data available.</p>
       </div>
     </main>
 
@@ -68,11 +66,15 @@ export default {
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
     },
-        async getTime() {
+formatDate(dateStr) {
+  const date = new Date(dateStr);
+  return isNaN(date.getTime()) ? "Invalid date" : date.toLocaleString();
+},
+    async getTime() {
       this.loading = true;
       this.errorMessage = "";
       try {
-        const response = await fetch(`${import.meta.env.VITE_APP_BACKEND_URL}/fetch-time`);
+        const response = await fetch(`${import.meta.env.VITE_APP_BACKEND_URL}/api/fetch-time`);
         if (!response.ok) throw new Error("Failed to fetch new time!");
         await this.loadTime();
       } catch (error) {
@@ -82,92 +84,47 @@ export default {
         this.loading = false;
       }
     },
-    // async getTime() {
-    //   this.loading = true;
-    //   this.errorMessage = "";
-    //   try {
-    //     //const response = await fetch("http://localhost:9999/fetch-time");
-
-    //     //const response = await fetch("https://finalweb-6lny.onrender.com/fetch-time");
-    //     // Fetch time data from the backend URL defined in the environment variable
-    //     const response = await fetch(`${process.env.VITE_APP_BACKEND_URL}/fetch-time`);
-
-    //     if (!response.ok) throw new Error("Failed to fetch new time!");
-    //     await this.loadTime();
-    //   } catch (error) {
-    //     this.errorMessage = "Failed to fetch new time data!";
-    //     console.error(error);
-    //   } finally {
-    //     this.loading = false;
-    //   }
-    // },
-
     async loadTime() {
       try {
-        const response = await fetch(`${import.meta.env.VITE_APP_BACKEND_URL}/time_info`);
+        const response = await fetch(`${import.meta.env.VITE_APP_BACKEND_URL}/api/time_info`);
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
-        console.log("Data fetched successfully:", data); // Log the fetched data
         this.time_info = data;
       } catch (error) {
         this.errorMessage = `Failed to load time data! ${error.message}`;
         console.error("Error fetching time data:", error);
       }
     },
-  },    
-  //   async loadTime() {
-  //     try {
-  //       //const res = await fetch("http://localhost:9999/time_info");
-        
-  //       //const response = await fetch("https://finalweb-6lny.onrender.com/time_info");
-  //       // Fetch time information from the backend URL defined in the environment variable
-  //       const response = await fetch(`${process.env.VITE_APP_BACKEND_URL}/time_info`);
-        
-  //       if (!response.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-  //       const data = await res.json();
-  //       console.log("Data fetched successfully:", data); // Log the fetched data
-  //       this.time_info = data;
-  //     } catch (error) {
-  //       this.errorMessage = `Failed to load time data! ${error.message}`;
-  //       console.error("Error fetching time data:", error);
-  //     }
-  //   },
-  // },
-
-mounted() {
-  console.log("Backend URL:", import.meta.env.VITE_APP_BACKEND_URL);
-  this.loadTime();
-},
+  },
+  mounted() {
+    console.log("Backend URL:", import.meta.env.VITE_APP_BACKEND_URL);
+    this.loadTime();
+  },
 };
 </script>
 
 <style scoped>
-/* Base Reset */
+/* Reset and Base Styles */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html,
-body {
-  height: 100%;
-  width: 100%;
+html, body {
   font-family: 'Montserrat', sans-serif;
   background-color: #fafafa;
   color: #333;
 }
 
-/* App Container */
+/* App Layout */
 #app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* Content Wrapper */
 .content-wrapper {
-  width: 100%;
   max-width: 1280px;
   margin: 0 auto;
   padding: 20px;
@@ -187,8 +144,7 @@ nav {
   gap: 30px;
 }
 
-.nav-links a,
-.nav-links router-link {
+.nav-links a {
   color: white;
   font-weight: bold;
   text-decoration: none;
@@ -205,7 +161,7 @@ nav {
 
 @media (max-width: 768px) {
   .hamburger {
-    display: block; /* Show hamburger button on mobile */
+    display: block;
   }
 
   .nav-links {
@@ -222,8 +178,7 @@ nav {
     display: flex;
   }
 
-  .nav-links a,
-  .nav-links router-link {
+  .nav-links a {
     padding: 10px;
     text-align: center;
   }
@@ -262,14 +217,14 @@ header button:hover:enabled {
   background-color: #218838;
 }
 
-/* Main */
+/* Main Content */
 main {
   flex-grow: 1;
   background-color: #f4f4f4;
   padding: 30px 0;
 }
 
-/* Grid Layout */
+/* Grid */
 .time-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -301,7 +256,15 @@ main {
   font-size: 1.05em;
 }
 
-/* Error Message */
+/* Footer */
+footer {
+  background-color: #003366;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* Error & Loading States */
 .error-message {
   color: #b30000;
   background: #ffe6e6;
@@ -315,15 +278,6 @@ main {
   color: #888;
   font-size: 1.2em;
   margin-top: 20px;
-}
-
-/* Footer */
-footer {
-  background-color: #003366;
-  color: white;
-  text-align: center;
-  padding: 20px 0;
-  font-size: 1em;
 }
 
 /* Spinner */

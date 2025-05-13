@@ -47,9 +47,10 @@
       </div>
     </main>
 
-    <!-- Footer -->
     <footer>
-
+      <div class="content-wrapper">
+        <p>&copy; 2025 World Time App</p>
+      </div>
     </footer>
   </div>
 </template>

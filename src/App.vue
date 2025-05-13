@@ -6,7 +6,7 @@
         <ul class="nav-links" :class="{ 'show': menuOpen }">
           <li><router-link to="/">Home</router-link></li>
           <li><router-link to="/timezones">Time Zones</router-link></li>
-          <li><router-link to="/About">About</router-link></li>
+          <li><router-link to="/about">About</router-link></li>
         </ul>
         <button class="hamburger" @click="toggleMenu">☰</button>
       </div>
@@ -38,16 +38,18 @@
             <p><strong>UTC Datetime:</strong> {{ formatDate(item.utc_datetime) }}</p>
           </article>
         </section>
+
+        <!-- Error & No Data Messages -->
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
         <p v-if="!loading && time_info.length === 0" class="no-data-message">No time data available.</p>
+        
+        <router-view /> <!-- Dynamically loads the content of other views -->
       </div>
     </main>
 
     <!-- Footer -->
     <footer>
-      <div class="content-wrapper">
-        <p>&copy; 2025 World Time App</p>
-      </div>
+
     </footer>
   </div>
 </template>
@@ -66,10 +68,10 @@ export default {
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
     },
-formatDate(dateStr) {
-  const date = new Date(dateStr);
-  return isNaN(date.getTime()) ? "Invalid date" : date.toLocaleString();
-},
+    formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return isNaN(date.getTime()) ? "Invalid date" : date.toLocaleString();
+    },
     async getTime() {
       this.loading = true;
       this.errorMessage = "";
@@ -115,6 +117,7 @@ html, body {
   font-family: 'Montserrat', sans-serif;
   background-color: #fafafa;
   color: #333;
+  height: 100%;
 }
 
 /* App Layout */
@@ -122,12 +125,6 @@ html, body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
-.content-wrapper {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 20px;
 }
 
 /* Navigation */
@@ -224,7 +221,7 @@ main {
   padding: 30px 0;
 }
 
-/* Grid */
+/* Time Grid */
 .time-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -232,7 +229,7 @@ main {
   padding: 20px;
 }
 
-/* Time Card */
+/* Time Card Styling */
 .container {
   background: white;
   padding: 20px;
